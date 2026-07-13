@@ -40,8 +40,6 @@ export const de = {
   save_assignments: 'Zuweisungen speichern',
   mqtt_saved: 'MQTT Einstellungen gespeichert.',
   mqtt_server_required: 'MQTT Server ist erforderlich.',
-  dashboard_intro: 'Schalte zugewiesene Remote-Steckdosen, starte angeschlossene Geräte neu und prüfe MQTT- sowie Ping-Status.',
-  dashboard_auto_refresh: 'Die Statusanzeige aktualisiert sich automatisch alle 30 Sekunden.',
   socket: 'Steckdose',
   ping: 'Ping',
   last_check: 'Letzte Prüfung',

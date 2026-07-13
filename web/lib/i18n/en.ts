@@ -40,8 +40,6 @@ export const en = {
   save_assignments: 'Save assignments',
   mqtt_saved: 'MQTT settings saved.',
   mqtt_server_required: 'MQTT server is required.',
-  dashboard_intro: 'Control assigned remote sockets, restart connected devices, and check MQTT and ping status.',
-  dashboard_auto_refresh: 'Status updates automatically every 30 seconds.',
   socket: 'Socket',
   ping: 'Ping',
   last_check: 'Last check',
