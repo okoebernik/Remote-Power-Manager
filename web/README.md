@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Remote Power Manager (Next.js)
 
-## Getting Started
+Next.js/TypeScript-Neubau der PHP-Anwendung im übergeordneten Verzeichnis. Schaltet Remote-Steckdosen per MQTT, mit Benutzerverwaltung, Geräte-Zuweisungen, MQTT-Einstellungen und Aktionsprotokoll.
 
-First, run the development server:
+Nutzt dieselbe Datenbank (SQLite oder MySQL/MariaDB) wie die PHP-Version unverändert weiter — bestehende Geräte, Benutzer und Zuweisungen müssen nicht neu angelegt werden.
+
+> **Status:** Diese Version läuft parallel zur produktiven PHP-Anwendung und wird gerade gegen echte Geräte verifiziert. Die PHP-Dateien bleiben bis zum finalen Cutover unangetastet.
+
+## Start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Danach im Browser öffnen: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Erster Admin-Login (identisch zur PHP-Version, sofern keine bestehende Datenbank verwendet wird):
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+Benutzer: admin
+Passwort: admin123
+```
 
-## Learn More
+Bitte nach dem ersten Login unter **Benutzer** ein neues Admin-Passwort setzen oder den Start-Admin entfernen.
 
-To learn more about Next.js, take a look at the following resources:
+## Konfiguration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Einstellungen erfolgen über `.env.local` (siehe `.env.local` im Projektverzeichnis, nicht eingecheckt):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+SESSION_SECRET=<zufälliger, langer String>
 
-## Deploy on Vercel
+DB_DRIVER=sqlite            # oder: mysql
+SQLITE_PATH=../data/app.sqlite
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# nur bei DB_DRIVER=mysql:
+MYSQL_HOST=127.0.0.1
+MYSQL_PORT=3306
+MYSQL_DATABASE=remote_power_manager
+MYSQL_USER=root
+MYSQL_PASSWORD=
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+INITIAL_ADMIN_USERNAME=admin
+INITIAL_ADMIN_PASSWORD=admin123
+
+MQTT_HOST=127.0.0.1
+MQTT_PORT=1883
+MQTT_STATUS_TIMEOUT_SECONDS=2
+```
+
+Die Tabellen werden beim ersten Start automatisch angelegt bzw. bei Bedarf um fehlende Spalten ergänzt — genau wie bei der PHP-Version, ohne separates Migrationsskript.
+
+## MQTT
+
+Broker-Zugangsdaten aus `.env.local` dienen als Startwerte. Admins können Host/Port/Timeout/Credentials auch direkt unter **MQTT** in der Weboberfläche ändern — gespeicherte Werte überschreiben dann die `.env.local`-Defaults, identisch zum Verhalten der PHP-Version.
+
+Unterstützt werden einfache ON/OFF-Payloads sowie strukturierte JSON-Payloads mit konfigurierbarem Power-Pfad (z. B. `POWER` oder `Status.Power`). Ein optionales Status-Request-Topic kann vor der Statusabfrage gesendet werden, falls das Gerät nicht von sich aus periodisch oder retained publiziert.
+
+Im Dashboard wird der Steckdosen- und Ping-Status nach jedem An/Aus/Neustart sofort aktualisiert, zusätzlich läuft alle 30 Sekunden ein automatischer Hintergrund-Abgleich.
+
+## Weitere Hinweise
+
+- **Dark Mode**: über den Umschalter im Menü unten links, folgt standardmäßig der Systemeinstellung.
+- **Navigation**: linke Seitenleiste, ein-/ausklappbar (Zustand wird im Browser gespeichert).
+- **Sprache**: Deutsch/Englisch pro Benutzer umschaltbar, wie in der PHP-Version.

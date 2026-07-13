@@ -2,6 +2,8 @@
 
 Kleine PHP-Webanwendung zum Neustarten von Remote-Steckdosen per MQTT.
 
+> **Hinweis:** Ein Neubau dieser Anwendung mit Next.js/TypeScript befindet sich in [`web/`](web/README.md) und nutzt dieselbe Datenbank unverändert weiter. Er wird aktuell parallel zur hier beschriebenen PHP-Version gegen echte Geräte getestet; die PHP-Dateien bleiben bis zum finalen Umstieg unangetastet.
+
 Die Oberfläche unterstützt Deutsch und Englisch. Jeder Benutzer kann seine bevorzugte Sprache oben in der Navigation selbst umstellen.
 
 ## Start
