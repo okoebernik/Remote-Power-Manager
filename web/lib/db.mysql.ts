@@ -158,6 +158,11 @@ export async function createMysqlAdapter(): Promise<DbAdapter> {
     user: mysqlConfig.username,
     password: mysqlConfig.password,
     charset: mysqlConfig.charset,
+    // Return DATETIME/TIMESTAMP/DATE columns as strings, matching SQLite's
+    // TEXT storage (and this app's Device/User/ActionLogEntry types) instead
+    // of mysql2's default of parsing them into JS Date objects, which broke
+    // rendering created_at/last_checked_at directly as JSX text.
+    dateStrings: true,
   });
 
   await migrate(pool);
