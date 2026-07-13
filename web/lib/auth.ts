@@ -73,7 +73,13 @@ export async function verifyCredentials(username: string, password: string): Pro
   const user = await database.get<User>('SELECT * FROM users WHERE username = ?', [username]);
   if (!user) return null;
 
-  const valid = await bcrypt.compare(password, user.password_hash);
+  // PHP's password_hash() produces $2y$-prefixed bcrypt hashes. Node's bcrypt
+  // package only recognizes $2a$/$2b$, and silently fails to verify $2y$
+  // hashes (always returns false, even for the correct password) instead of
+  // throwing. $2y$ is cryptographically identical to $2b$, so it's safe to
+  // normalize the prefix before comparing.
+  const normalizedHash = user.password_hash.replace(/^\$2y\$/, '$2b$');
+  const valid = await bcrypt.compare(password, normalizedHash);
   return valid ? user : null;
 }
 
