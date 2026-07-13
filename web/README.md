@@ -1,10 +1,8 @@
-# Remote Power Manager (Next.js)
+# Remote Power Manager
 
-Next.js/TypeScript-Neubau der PHP-Anwendung im übergeordneten Verzeichnis. Schaltet Remote-Steckdosen per MQTT, mit Benutzerverwaltung, Geräte-Zuweisungen, MQTT-Einstellungen und Aktionsprotokoll.
+Next.js/TypeScript-Webanwendung zum Schalten von Remote-Steckdosen per MQTT, mit Benutzerverwaltung, Geräte-Zuweisungen, MQTT-Einstellungen und Aktionsprotokoll.
 
-Nutzt dieselbe Datenbank (SQLite oder MySQL/MariaDB) wie die PHP-Version unverändert weiter — bestehende Geräte, Benutzer und Zuweisungen müssen nicht neu angelegt werden.
-
-> **Status:** Diese Version läuft parallel zur produktiven PHP-Anwendung und wird gerade gegen echte Geräte verifiziert. Die PHP-Dateien bleiben bis zum finalen Cutover unangetastet.
+Nutzt SQLite oder MySQL/MariaDB als Datenbank.
 
 ## Start
 
@@ -15,7 +13,7 @@ npm run dev
 
 Danach im Browser öffnen: [http://localhost:3000](http://localhost:3000)
 
-Erster Admin-Login (identisch zur PHP-Version, sofern keine bestehende Datenbank verwendet wird):
+Erster Admin-Login (sofern keine bestehende Datenbank verwendet wird):
 
 ```text
 Benutzer: admin
@@ -49,11 +47,11 @@ MQTT_PORT=1883
 MQTT_STATUS_TIMEOUT_SECONDS=2
 ```
 
-Die Tabellen werden beim ersten Start automatisch angelegt bzw. bei Bedarf um fehlende Spalten ergänzt — genau wie bei der PHP-Version, ohne separates Migrationsskript.
+Die Tabellen werden beim ersten Start automatisch angelegt bzw. bei Bedarf um fehlende Spalten ergänzt, ohne separates Migrationsskript.
 
 ## MQTT
 
-Broker-Zugangsdaten aus `.env.local` dienen als Startwerte. Admins können Host/Port/Timeout/Credentials auch direkt unter **MQTT** in der Weboberfläche ändern — gespeicherte Werte überschreiben dann die `.env.local`-Defaults, identisch zum Verhalten der PHP-Version.
+Broker-Zugangsdaten aus `.env.local` dienen als Startwerte. Admins können Host/Port/Timeout/Credentials auch direkt unter **MQTT** in der Weboberfläche ändern — gespeicherte Werte überschreiben dann die `.env.local`-Defaults.
 
 Unterstützt werden einfache ON/OFF-Payloads sowie strukturierte JSON-Payloads mit konfigurierbarem Power-Pfad (z. B. `POWER` oder `Status.Power`). Ein optionales Status-Request-Topic kann vor der Statusabfrage gesendet werden, falls das Gerät nicht von sich aus periodisch oder retained publiziert.
 
@@ -63,4 +61,4 @@ Im Dashboard wird der Steckdosen- und Ping-Status nach jedem An/Aus/Neustart sof
 
 - **Dark Mode**: über den Umschalter im Menü unten links, folgt standardmäßig der Systemeinstellung.
 - **Navigation**: linke Seitenleiste, ein-/ausklappbar (Zustand wird im Browser gespeichert).
-- **Sprache**: Deutsch/Englisch pro Benutzer umschaltbar, wie in der PHP-Version.
+- **Sprache**: Deutsch/Englisch pro Benutzer umschaltbar.
