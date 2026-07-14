@@ -38,6 +38,16 @@ function connectClient(config: MqttConfig): Promise<MqttClient> {
   });
 }
 
+export async function checkBrokerConnection(config: MqttConfig): Promise<boolean> {
+  try {
+    const client = await connectClient(config);
+    client.end(true);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function publish(config: MqttConfig, topic: string, payload: string): Promise<string> {
   const trimmedTopic = topic.trim();
   if (trimmedTopic === '') {
