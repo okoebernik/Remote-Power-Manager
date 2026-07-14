@@ -22,6 +22,17 @@ Passwort: admin123
 
 Bitte nach dem ersten Login unter **Benutzer** ein neues Admin-Passwort setzen oder den Start-Admin entfernen.
 
+## Produktion / Deployment
+
+Für den Betrieb auf einem Server oder Zugriff über eine andere IP als `localhost` **nicht** `npm run dev` verwenden, sondern einen Production-Build:
+
+```bash
+npm run build
+npm run start
+```
+
+`npm run dev` ist nur für die lokale Entwicklung gedacht und baut eine WebSocket-Verbindung für Hot-Reload (HMR) auf. Wird die Seite über eine LAN-IP oder einen Reverse-Proxy aufgerufen, kann dieser HMR-Handshake fehlschlagen (`ERR_INVALID_HTTP_RESPONSE` in der Browser-Konsole) — dadurch bleiben interaktive Elemente wie der Sidebar-Einklapp-Button oder der Dark-Mode-Umschalter wirkungslos, obwohl der Code korrekt ist.
+
 ## Konfiguration
 
 Einstellungen erfolgen über `.env.local` (siehe `.env.local` im Projektverzeichnis, nicht eingecheckt):
