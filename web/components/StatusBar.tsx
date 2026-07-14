@@ -42,11 +42,11 @@ export function StatusBar({ locale }: { locale: Locale }) {
   }, []);
 
   if (now === null) {
-    return <div className="mb-6 h-10 rounded-lg border bg-card" />;
+    return <div className="sticky top-0 z-10 h-12 shrink-0 border-b border-white/10 bg-slate-900" />;
   }
 
   const dotClassName =
-    mqttState === 'connected' ? 'bg-green-500' : mqttState === 'disconnected' ? 'bg-red-500' : 'bg-muted-foreground animate-pulse';
+    mqttState === 'connected' ? 'bg-green-500' : mqttState === 'disconnected' ? 'bg-red-500' : 'bg-white/40 animate-pulse';
   const stateLabel =
     mqttState === 'connected'
       ? t(locale, 'mqtt_connected')
@@ -55,12 +55,12 @@ export function StatusBar({ locale }: { locale: Locale }) {
         : t(locale, 'mqtt_checking');
 
   return (
-    <div className="mb-6 flex items-center justify-between rounded-lg border bg-card px-4 py-2 text-sm">
+    <div className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-white/10 bg-slate-900 px-4 py-3 text-sm text-white">
       <div className="flex items-center gap-2" title={stateLabel}>
         <span className={cn('size-2.5 shrink-0 rounded-full', dotClassName)} aria-label={stateLabel} />
         <span>{t(locale, 'mqtt_connection')}</span>
       </div>
-      <div className="font-mono tabular-nums text-muted-foreground">
+      <div className="font-mono tabular-nums text-white/70">
         {now.toLocaleTimeString(locale === 'de' ? 'de-DE' : 'en-US')}
       </div>
     </div>
