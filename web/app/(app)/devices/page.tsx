@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DeleteConfirmButton } from '@/components/DeleteConfirmButton';
 import { LabeledSelect } from '@/components/LabeledSelect';
+import { DeviceColorPicker } from '@/components/DeviceColorPicker';
 import Link from 'next/link';
 import type { Device } from '@/lib/types';
 
@@ -16,6 +17,7 @@ const emptyDevice: Device = {
   id: 0,
   name: '',
   description: '',
+  color: 'blue',
   device_ip: '',
   mqtt_on_topic: '',
   mqtt_on_payload: 'ON',
@@ -77,6 +79,10 @@ export default async function DevicesPage({
             <div className="flex flex-col gap-2">
               <Label htmlFor="description">{t(locale, 'description')}</Label>
               <Input id="description" name="description" defaultValue={editDevice.description} />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label>{t(locale, 'device_color')}</Label>
+              <DeviceColorPicker name="color" defaultValue={editDevice.color} locale={locale} />
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-2">

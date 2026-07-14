@@ -1,6 +1,7 @@
 export type Role = 'admin' | 'user';
 export type Locale = 'de' | 'en';
 export type MqttStatusMode = 'plain' | 'structured';
+export type DeviceColor = 'blue' | 'green' | 'red' | 'amber' | 'purple';
 
 export interface User {
   id: number;
@@ -15,6 +16,7 @@ export interface Device {
   id: number;
   name: string;
   description: string;
+  color: DeviceColor;
   device_ip: string;
   mqtt_on_topic: string;
   mqtt_on_payload: string;

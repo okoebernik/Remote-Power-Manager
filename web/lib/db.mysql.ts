@@ -59,6 +59,7 @@ async function migrate(pool: mysql.Pool) {
   await ensureColumn(pool, 'devices', 'mqtt_status_power_path', `mqtt_status_power_path VARCHAR(255) NOT NULL DEFAULT 'POWER'`);
   await ensureColumn(pool, 'devices', 'last_status_payload', `last_status_payload TEXT NOT NULL`);
   await ensureColumn(pool, 'devices', 'last_status_error', `last_status_error TEXT NOT NULL`);
+  await ensureColumn(pool, 'devices', 'color', `color VARCHAR(20) NOT NULL DEFAULT 'blue'`);
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS device_user (

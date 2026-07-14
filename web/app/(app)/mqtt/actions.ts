@@ -5,6 +5,7 @@ import { requireAdmin } from '@/lib/auth';
 import { saveAppSetting } from '@/lib/settings';
 import { setFlash } from '@/lib/flash';
 import { normalizeLocale, t } from '@/lib/i18n';
+import { DEVICE_COLORS } from '@/lib/deviceColor';
 
 export async function saveMqttSettingsAction(formData: FormData): Promise<void> {
   const admin = await requireAdmin();
@@ -43,5 +44,20 @@ export async function saveMqttSettingsAction(formData: FormData): Promise<void> 
   await saveAppSetting('mqtt_status_timeout_seconds', String(timeout));
 
   await setFlash(t(locale, 'mqtt_saved'));
+  redirect('/mqtt');
+}
+
+export async function saveDeviceGroupsAction(formData: FormData): Promise<void> {
+  const admin = await requireAdmin();
+  const locale = normalizeLocale(admin.locale);
+
+  await Promise.all(
+    DEVICE_COLORS.map((color) => {
+      const value = String(formData.get(`group_name_${color}`) ?? '').trim();
+      return saveAppSetting(`group_name_${color}`, value);
+    }),
+  );
+
+  await setFlash(t(locale, 'groups_saved'));
   redirect('/mqtt');
 }

@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusBadge } from '@/components/StatusBadge';
 import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
+import { DEVICE_COLOR_BORDER_CLASSES } from '@/lib/deviceColor';
 import type { Device, Locale } from '@/lib/types';
 import { DeviceActions } from '@/components/DeviceActions';
 
@@ -14,7 +16,10 @@ export function DeviceCard({
   showDebugFields: boolean;
 }) {
   return (
-    <Card data-device-id={device.id} className="flex flex-col justify-between">
+    <Card
+      data-device-id={device.id}
+      className={cn('flex flex-col justify-between border-2', DEVICE_COLOR_BORDER_CLASSES[device.color])}
+    >
       <CardHeader>
         <CardTitle>{device.name}</CardTitle>
         {device.description !== '' && <p className="text-sm text-muted-foreground">{device.description}</p>}

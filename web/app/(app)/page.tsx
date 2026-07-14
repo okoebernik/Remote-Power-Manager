@@ -1,6 +1,6 @@
 import { requireLogin } from '@/lib/auth';
 import { devicesForUser } from '@/lib/deviceStatus';
-import { appSetting } from '@/lib/settings';
+import { appSetting, deviceGroupNames } from '@/lib/settings';
 import { normalizeLocale, t } from '@/lib/i18n';
 import { DeviceGrid } from '@/components/DeviceGrid';
 
@@ -8,9 +8,10 @@ export default async function DashboardPage() {
   const user = await requireLogin();
   const locale = normalizeLocale(user.locale);
 
-  const [devices, showDebugFields] = await Promise.all([
+  const [devices, showDebugFields, groupNames] = await Promise.all([
     devicesForUser(user.id, user.role === 'admin'),
     appSetting('show_debug_fields', '0'),
+    deviceGroupNames(),
   ]);
 
   return (
@@ -18,7 +19,12 @@ export default async function DashboardPage() {
       <div>
         <h1 className="text-2xl font-bold">{t(locale, 'dashboard')}</h1>
       </div>
-      <DeviceGrid initialDevices={devices} locale={locale} showDebugFields={showDebugFields === '1'} />
+      <DeviceGrid
+        initialDevices={devices}
+        locale={locale}
+        showDebugFields={showDebugFields === '1'}
+        groupNames={groupNames}
+      />
     </div>
   );
 }

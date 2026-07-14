@@ -1,6 +1,7 @@
 import { db } from './db';
 import { config } from './config';
-import type { MqttConfig } from './types';
+import { DEVICE_COLORS } from './deviceColor';
+import type { DeviceColor, MqttConfig } from './types';
 
 export async function appSetting(key: string, fallback = ''): Promise<string> {
   const database = await db();
@@ -44,4 +45,11 @@ export async function mqttConfig(): Promise<MqttConfig> {
     password,
     status_timeout_seconds: Number.parseInt(statusTimeoutSeconds, 10) || defaults.statusTimeoutSeconds,
   };
+}
+
+export async function deviceGroupNames(): Promise<Record<DeviceColor, string>> {
+  const entries = await Promise.all(
+    DEVICE_COLORS.map(async (color) => [color, await appSetting(`group_name_${color}`, '')] as const),
+  );
+  return Object.fromEntries(entries) as Record<DeviceColor, string>;
 }

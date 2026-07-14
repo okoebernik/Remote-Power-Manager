@@ -58,6 +58,7 @@ function migrate(sqlite: Database.Database) {
   ensureColumn(sqlite, 'devices', 'mqtt_status_power_path', `mqtt_status_power_path TEXT NOT NULL DEFAULT 'POWER'`);
   ensureColumn(sqlite, 'devices', 'last_status_payload', `last_status_payload TEXT NOT NULL DEFAULT ''`);
   ensureColumn(sqlite, 'devices', 'last_status_error', `last_status_error TEXT NOT NULL DEFAULT ''`);
+  ensureColumn(sqlite, 'devices', 'color', `color TEXT NOT NULL DEFAULT 'blue'`);
 
   sqlite.exec(`
     CREATE TABLE IF NOT EXISTS device_user (

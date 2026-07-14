@@ -1,19 +1,25 @@
 import { requireAdmin } from '@/lib/auth';
 import { normalizeLocale, t } from '@/lib/i18n';
-import { mqttConfig } from '@/lib/settings';
+import { mqttConfig, deviceGroupNames } from '@/lib/settings';
 import { appSetting } from '@/lib/settings';
-import { saveMqttSettingsAction } from './actions';
+import { saveMqttSettingsAction, saveDeviceGroupsAction } from './actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import { DEVICE_COLORS, DEVICE_COLOR_LABEL_KEYS, DEVICE_COLOR_SWATCH_CLASSES } from '@/lib/deviceColor';
 
 export default async function MqttSettingsPage() {
   const admin = await requireAdmin();
   const locale = normalizeLocale(admin.locale);
 
-  const [mqtt, showDebugFields] = await Promise.all([mqttConfig(), appSetting('show_debug_fields', '0')]);
+  const [mqtt, showDebugFields, groupNames] = await Promise.all([
+    mqttConfig(),
+    appSetting('show_debug_fields', '0'),
+    deviceGroupNames(),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -92,6 +98,36 @@ export default async function MqttSettingsPage() {
           <div>
             {t(locale, 'status')} Timeout: <strong>{mqtt.status_timeout_seconds} s</strong>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t(locale, 'device_groups')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form action={saveDeviceGroupsAction} className="flex flex-col gap-4">
+            {DEVICE_COLORS.map((color) => {
+              const defaultLabel = t(locale, DEVICE_COLOR_LABEL_KEYS[color]);
+              return (
+                <div key={color} className="flex items-center gap-3">
+                  <span className={cn('size-4 shrink-0 rounded-full', DEVICE_COLOR_SWATCH_CLASSES[color])} />
+                  <div className="flex flex-1 flex-col gap-2">
+                    <Label htmlFor={`group_name_${color}`}>{defaultLabel}</Label>
+                    <Input
+                      id={`group_name_${color}`}
+                      name={`group_name_${color}`}
+                      defaultValue={groupNames[color]}
+                      placeholder={defaultLabel}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+            <div>
+              <Button type="submit">{t(locale, 'save_groups')}</Button>
+            </div>
+          </form>
         </CardContent>
       </Card>
     </div>

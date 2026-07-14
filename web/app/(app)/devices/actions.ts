@@ -6,15 +6,18 @@ import { db } from '@/lib/db';
 import { setFlash } from '@/lib/flash';
 import { t } from '@/lib/i18n';
 import { normalizeLocale } from '@/lib/i18n';
+import { isDeviceColor } from '@/lib/deviceColor';
 
 export async function saveDeviceAction(formData: FormData): Promise<void> {
   const admin = await requireAdmin();
   const locale = normalizeLocale(admin.locale);
 
   const id = Number.parseInt(String(formData.get('id') ?? '0'), 10);
+  const color = String(formData.get('color') ?? '');
   const values = [
     String(formData.get('name') ?? '').trim(),
     String(formData.get('description') ?? '').trim(),
+    isDeviceColor(color) ? color : 'blue',
     String(formData.get('device_ip') ?? '').trim(),
     String(formData.get('mqtt_on_topic') ?? '').trim(),
     String(formData.get('mqtt_on_payload') ?? 'ON').trim() || 'ON',
@@ -30,7 +33,7 @@ export async function saveDeviceAction(formData: FormData): Promise<void> {
     Math.max(0, Number.parseInt(String(formData.get('restart_delay_ms') ?? '15000'), 10) || 15000),
   ];
 
-  if (values[0] === '' || values[3] === '' || values[5] === '') {
+  if (values[0] === '' || values[4] === '' || values[6] === '') {
     await setFlash(t(locale, 'required_device_fields'), 'error');
     redirect('/devices');
   }
@@ -40,7 +43,7 @@ export async function saveDeviceAction(formData: FormData): Promise<void> {
   if (id > 0) {
     await database.run(
       `UPDATE devices
-       SET name = ?, description = ?, device_ip = ?, mqtt_on_topic = ?, mqtt_on_payload = ?,
+       SET name = ?, description = ?, color = ?, device_ip = ?, mqtt_on_topic = ?, mqtt_on_payload = ?,
            mqtt_off_topic = ?, mqtt_off_payload = ?, mqtt_status_topic = ?, mqtt_status_request_topic = ?,
            mqtt_status_request_payload = ?, mqtt_status_mode = ?, mqtt_status_power_path = ?,
            mqtt_status_on_value = ?, mqtt_status_off_value = ?, restart_delay_ms = ?
@@ -51,11 +54,11 @@ export async function saveDeviceAction(formData: FormData): Promise<void> {
   } else {
     await database.run(
       `INSERT INTO devices (
-        name, description, device_ip, mqtt_on_topic, mqtt_on_payload,
+        name, description, color, device_ip, mqtt_on_topic, mqtt_on_payload,
         mqtt_off_topic, mqtt_off_payload, mqtt_status_topic, mqtt_status_request_topic,
         mqtt_status_request_payload, mqtt_status_mode, mqtt_status_power_path,
         mqtt_status_on_value, mqtt_status_off_value, restart_delay_ms
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       values,
     );
     await setFlash(t(locale, 'device_created'));
