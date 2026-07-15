@@ -60,3 +60,40 @@ git pull
 npm run build
 sudo systemctl restart remote-power-manager.service
 ```
+
+## Reverse-Proxy mit TLS (nginx, reines LAN ohne Domain)
+
+`nginx-self-signed.conf` terminiert TLS extern mit einem selbstsignierten Zertifikat und
+leitet intern per HTTP an die App (`127.0.0.1:3000`) weiter. Sinnvoll, wenn die App nur im
+LAN läuft und keine öffentliche Domain für Let's Encrypt vorhanden ist.
+
+Vorteil gegenüber `COOKIE_SECURE=false`: Der Browser sieht eine echte HTTPS-Verbindung (zu
+nginx), das `Secure`-Cookie-Attribut kann also aktiviert bleiben (Standardverhalten in
+Production) und muss nicht abgeschaltet werden — Zugriff aus anderen Subnetzen
+funktioniert trotzdem.
+
+1. **Zertifikat erzeugen** (einmalig, IP/Hostname anpassen):
+
+   ```bash
+   sudo mkdir -p /etc/nginx/ssl
+   sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
+     -keyout /etc/nginx/ssl/rpm.key -out /etc/nginx/ssl/rpm.crt \
+     -subj "/CN=rpm.local" \
+     -addext "subjectAltName=DNS:rpm.local,IP:192.168.1.10"
+   ```
+
+2. **Config installieren** (zuvor `server_name`/IP in der Datei anpassen):
+
+   ```bash
+   sudo cp nginx-self-signed.conf /etc/nginx/sites-available/remote-power-manager.conf
+   sudo ln -s /etc/nginx/sites-available/remote-power-manager.conf /etc/nginx/sites-enabled/
+   sudo nginx -t && sudo systemctl reload nginx
+   ```
+
+3. **Next.js weiterhin nur auf `127.0.0.1:3000` binden lassen** (nicht auf `0.0.0.0`), damit
+   die App nur über nginx erreichbar ist, nicht direkt am Port ohne TLS.
+
+Da kein öffentlich vertrauenswürdiges Zertifikat verwendet wird, zeigen Browser beim ersten
+Zugriff eine Warnung — das ist bei einer reinen LAN-Lösung ohne Domain normal. Wer das
+vermeiden will, kann `rpm.crt` auf den Clients manuell als vertrauenswürdig importieren,
+oder alternativ eine echte Domain mit Let's Encrypt einrichten (z. B. über Caddy).
