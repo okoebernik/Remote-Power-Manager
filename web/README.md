@@ -33,6 +33,18 @@ npm run start
 
 `npm run dev` ist nur für die lokale Entwicklung gedacht und baut eine WebSocket-Verbindung für Hot-Reload (HMR) auf. Wird die Seite über eine LAN-IP oder einen Reverse-Proxy aufgerufen, kann dieser HMR-Handshake fehlschlagen (`ERR_INVALID_HTTP_RESPONSE` in der Browser-Konsole) — dadurch bleiben interaktive Elemente wie der Sidebar-Einklapp-Button oder der Dark-Mode-Umschalter wirkungslos, obwohl der Code korrekt ist.
 
+### Zugriff aus anderen Subnetzen/über LAN-IP ohne TLS
+
+Im Production-Build (`NODE_ENV=production`) wird das Session-Cookie standardmäßig mit dem `Secure`-Attribut gesetzt. Browser speichern `Secure`-Cookies nur in einem sicheren Kontext (HTTPS oder `http://localhost`). Wird die Anwendung per einfachem HTTP über eine LAN-IP (z. B. `http://192.168.x.x:3000`) aus einem anderen Subnetz aufgerufen, verwirft der Browser das Cookie stillschweigend — der Login scheint zu funktionieren, aber schon der nächste Seitenwechsel verlangt erneut einen Login, und Status-Abfragen (z. B. MQTT) schlagen mit `401` fehl, was in der Oberfläche als „getrennt“ erscheint.
+
+Steht kein TLS (z. B. via Reverse-Proxy) zur Verfügung, kann das `Secure`-Attribut über `.env.local` deaktiviert werden:
+
+```bash
+COOKIE_SECURE=false
+```
+
+Empfohlen ist stattdessen ein Reverse-Proxy mit TLS-Zertifikat, dann kann `COOKIE_SECURE` unverändert bleiben (Standard: an in Production).
+
 ## Konfiguration
 
 Einstellungen erfolgen über `.env.local` (siehe `.env.local` im Projektverzeichnis, nicht eingecheckt):
@@ -56,6 +68,9 @@ INITIAL_ADMIN_PASSWORD=admin123
 MQTT_HOST=127.0.0.1
 MQTT_PORT=1883
 MQTT_STATUS_TIMEOUT_SECONDS=2
+
+# nur nötig für Zugriff per HTTP (ohne TLS) über eine LAN-IP/anderes Subnetz statt localhost, siehe unten:
+# COOKIE_SECURE=false
 ```
 
 Die Tabellen werden beim ersten Start automatisch angelegt bzw. bei Bedarf um fehlende Spalten ergänzt, ohne separates Migrationsskript.

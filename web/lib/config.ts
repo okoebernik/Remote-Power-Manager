@@ -36,5 +36,12 @@ export const config = {
   },
   session: {
     password: process.env.SESSION_SECRET ?? 'change-this-session-secret-to-a-random-32-char-value',
+    // Browsers only store `Secure` cookies on HTTPS (or localhost). Default to that
+    // behavior in production, but allow explicit override for plain-HTTP LAN/reverse-proxy
+    // setups without TLS, where a `Secure` cookie would otherwise be silently dropped.
+    cookieSecure:
+      process.env.COOKIE_SECURE !== undefined
+        ? process.env.COOKIE_SECURE === 'true'
+        : process.env.NODE_ENV === 'production',
   },
 } as const;

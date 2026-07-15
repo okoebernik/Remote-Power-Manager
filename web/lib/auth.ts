@@ -16,7 +16,7 @@ const sessionOptions = {
   password: config.session.password,
   cookieName: 'rpm_session',
   cookieOptions: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: config.session.cookieSecure,
     sameSite: 'lax' as const,
   },
 };
