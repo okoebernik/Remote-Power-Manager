@@ -1,0 +1,17 @@
+[Unit]
+Description=Remote Power Manager (Next.js)
+After=network.target mosquitto.service
+Wants=mosquitto.service
+
+[Service]
+Type=simple
+User=rpm
+Group=rpm
+WorkingDirectory=/opt/rpm-repo/web
+ExecStart=/usr/bin/npm run start
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
