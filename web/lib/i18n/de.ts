@@ -46,6 +46,8 @@ export const de = {
   on: 'An',
   off: 'Aus',
   restart: 'Neustart',
+  device_off_confirm: '„:name" wirklich ausschalten?',
+  device_restart_confirm: '„:name" wirklich neu starten?',
   status: 'Status',
   cancel: 'Abbrechen',
   save: 'Speichern',

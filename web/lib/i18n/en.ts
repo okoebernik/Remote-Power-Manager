@@ -46,6 +46,8 @@ export const en = {
   on: 'On',
   off: 'Off',
   restart: 'Restart',
+  device_off_confirm: 'Really turn off ":name"?',
+  device_restart_confirm: 'Really restart ":name"?',
   status: 'Status',
   cancel: 'Cancel',
   save: 'Save',

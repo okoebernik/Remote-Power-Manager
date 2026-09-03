@@ -50,7 +50,7 @@ export function DeviceCard({
             </>
           )}
         </div>
-        <DeviceActions deviceId={device.id} locale={locale} />
+        <DeviceActions deviceId={device.id} deviceName={device.name} locale={locale} />
       </CardContent>
     </Card>
   );
