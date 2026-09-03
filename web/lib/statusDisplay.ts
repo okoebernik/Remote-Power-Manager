@@ -3,7 +3,7 @@ export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' |
 export function statusLabel(status: string): BadgeVariant {
   if (status === 'online') return 'success';
   if (status === 'offline') return 'destructive';
-  if (status === 'on') return 'default';
+  if (status === 'on') return 'success';
   if (status === 'off') return 'secondary';
   if (status === 'invalid') return 'destructive';
   return 'outline';
