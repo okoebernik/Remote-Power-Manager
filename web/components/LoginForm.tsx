@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import Image from 'next/image';
 import { loginAction, type LoginState } from '@/app/login/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,7 +22,18 @@ export function LoginForm({ labels }: LoginFormProps) {
   const [state, formAction, pending] = useActionState<LoginState, FormData>(loginAction, {});
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-muted px-4">
+      <div className="flex flex-col items-center gap-2">
+        <Image
+          src="/fugro-logo.png"
+          alt="Fugro"
+          width={130}
+          height={59}
+          priority
+          className="h-9 w-auto dark:brightness-0 dark:invert"
+        />
+        <span className="text-sm font-medium text-muted-foreground">Remote Power Manager</span>
+      </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>{labels.title}</CardTitle>

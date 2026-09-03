@@ -82,15 +82,17 @@ export function Sidebar({ username, role, locale }: SidebarProps) {
     >
       <div className="flex items-center justify-between gap-2 p-3">
         {!collapsed && (
-          <Image
-            src="/fugro-logo.png"
-            alt="Fugro"
-            title="Remote Power Manager"
-            width={130}
-            height={59}
-            priority
-            className="h-7 w-auto shrink-0 brightness-0 invert"
-          />
+          <div className="flex min-w-0 flex-col gap-1">
+            <Image
+              src="/fugro-logo.png"
+              alt="Fugro"
+              width={130}
+              height={59}
+              priority
+              className="h-5 w-auto shrink-0 brightness-0 invert"
+            />
+            <span className="truncate text-xs font-medium text-white/70">Remote Power Manager</span>
+          </div>
         )}
         <button
           type="button"
