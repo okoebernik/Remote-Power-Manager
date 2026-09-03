@@ -21,13 +21,20 @@ export async function refreshDeviceStatus(device: Device): Promise<Device> {
     [statusResult.status, statusResult.payload.slice(0, 4000), statusResult.error.slice(0, 1000), pingStatus, device.id],
   );
 
+  // Read the timestamp back instead of formatting one in JS, so polled updates
+  // render identically to a fresh page load (same DB column, same driver formatting).
+  const updated = await database.get<{ last_checked_at: string | null }>(
+    'SELECT last_checked_at FROM devices WHERE id = ?',
+    [device.id],
+  );
+
   return {
     ...device,
     last_socket_status: statusResult.status,
     last_status_payload: statusResult.payload,
     last_status_error: statusResult.error,
     last_ping_status: pingStatus,
-    last_checked_at: new Date().toISOString(),
+    last_checked_at: updated?.last_checked_at ?? device.last_checked_at,
   };
 }
 
