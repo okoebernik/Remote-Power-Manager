@@ -32,7 +32,7 @@ export function LoginForm({ labels }: LoginFormProps) {
           priority
           className="h-14 w-auto dark:brightness-0 dark:invert"
         />
-        <span className="text-sm font-medium text-muted-foreground">Remote Power Manager</span>
+        <span className="text-sm font-bold text-foreground">Remote Power Manager</span>
       </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
