@@ -101,10 +101,12 @@ export function Sidebar({ username, role, locale }: SidebarProps) {
         </button>
       </div>
       {!collapsed && (
-        <div className="truncate px-3 pb-2 text-xs font-medium text-white/70">Remote Power Manager</div>
+        <div className="truncate border-b border-white/10 px-3 pb-3 text-sm font-bold text-white">
+          Remote Power Manager
+        </div>
       )}
 
-      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-2">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-2 pt-2">
         {items.map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href;
