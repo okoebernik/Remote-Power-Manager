@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -80,7 +81,17 @@ export function Sidebar({ username, role, locale }: SidebarProps) {
       )}
     >
       <div className="flex items-center justify-between gap-2 p-3">
-        {!collapsed && <span className="truncate font-bold">Remote Power Manager</span>}
+        {!collapsed && (
+          <Image
+            src="/fugro-logo.png"
+            alt="Fugro"
+            title="Remote Power Manager"
+            width={130}
+            height={59}
+            priority
+            className="h-7 w-auto shrink-0 brightness-0 invert"
+          />
+        )}
         <button
           type="button"
           onClick={toggle}
