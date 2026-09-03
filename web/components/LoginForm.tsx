@@ -30,7 +30,7 @@ export function LoginForm({ labels }: LoginFormProps) {
           width={130}
           height={59}
           priority
-          className="h-9 w-auto dark:brightness-0 dark:invert"
+          className="h-14 w-auto dark:brightness-0 dark:invert"
         />
         <span className="text-sm font-medium text-muted-foreground">Remote Power Manager</span>
       </div>

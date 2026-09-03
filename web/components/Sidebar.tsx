@@ -82,17 +82,14 @@ export function Sidebar({ username, role, locale }: SidebarProps) {
     >
       <div className="flex items-center justify-between gap-2 p-3">
         {!collapsed && (
-          <div className="flex min-w-0 flex-col gap-1">
-            <Image
-              src="/fugro-logo.png"
-              alt="Fugro"
-              width={130}
-              height={59}
-              priority
-              className="h-5 w-auto shrink-0 brightness-0 invert"
-            />
-            <span className="truncate text-xs font-medium text-white/70">Remote Power Manager</span>
-          </div>
+          <Image
+            src="/fugro-logo.png"
+            alt="Fugro"
+            width={130}
+            height={59}
+            priority
+            className="h-9 w-auto shrink-0 brightness-0 invert"
+          />
         )}
         <button
           type="button"
@@ -103,6 +100,9 @@ export function Sidebar({ username, role, locale }: SidebarProps) {
           {collapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
         </button>
       </div>
+      {!collapsed && (
+        <div className="truncate px-3 pb-2 text-xs font-medium text-white/70">Remote Power Manager</div>
+      )}
 
       <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-2">
         {items.map((item) => {
