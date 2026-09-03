@@ -14,10 +14,18 @@ interface UserSelectProps {
 export function UserSelect({ users, selectedUserId, label, roleLabels }: UserSelectProps) {
   const router = useRouter();
 
+  // Lets <SelectValue> show the label immediately on first render instead of the
+  // raw id — without this, the popup's <SelectItem>s (where the label normally
+  // comes from) aren't mounted yet until the dropdown is opened once.
+  const items = Object.fromEntries(
+    users.map((user) => [String(user.id), `${user.username} (${roleLabels[user.role]})`]),
+  );
+
   return (
     <div className="flex max-w-sm flex-col gap-2">
       <Label htmlFor="user_id">{label}</Label>
       <Select
+        items={items}
         defaultValue={selectedUserId ? String(selectedUserId) : undefined}
         onValueChange={(value) => router.push(`/assignments?user_id=${value}`)}
       >
